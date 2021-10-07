@@ -45,7 +45,7 @@ class Contributor(models.Model):
         unique_together = [['user', 'project']]
 
 
-class Issues(models.Model):
+class Issue(models.Model):
 
     PRIORITY = (
         ('low', 'Low'),
@@ -78,10 +78,10 @@ class Issues(models.Model):
     def __str__(self):
         return f"{self.title}"
 
-class Commentaire(models.Model):
+class Comment(models.Model):
     description = models.TextField(max_length=200)
     author = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
-    issues = models.ForeignKey(to=Issues, on_delete=models.CASCADE)
+    issues = models.ForeignKey(to=Issue, on_delete=models.CASCADE)
     created_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
