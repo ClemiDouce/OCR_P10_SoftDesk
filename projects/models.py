@@ -37,8 +37,8 @@ class Contributor(models.Model):
         ('all', 'Author')
     )
 
-    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    project = models.ForeignKey(to=Project, on_delete=models.CASCADE)
+    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
+    project = models.ForeignKey(to=Project, on_delete=models.CASCADE, blank=True, null=True)
     role = models.CharField(choices=ROLES, max_length=20, default="contributor")
     permission = models.CharField(choices=PERMISSIONS, max_length=20, default="restricted")
 
@@ -75,10 +75,10 @@ class Issue(models.Model):
     description = models.TextField(max_length=200)
     tag = models.CharField(choices=BALISE, max_length=12, default="bug")
     priority = models.CharField(choices=PRIORITY, max_length=12, default="low")
-    project = models.ForeignKey(to=Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(to=Project, on_delete=models.CASCADE, blank=True, null=True)
     status = models.CharField(choices=STATUS, max_length=20, default="todo")
-    author = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='author')
-    assigne = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='assigne')
+    author = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True, related_name='author')
+    assigne = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank=True, null=True, related_name='assigne')
     created_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -90,8 +90,8 @@ class Issue(models.Model):
 
 class Comment(models.Model):
     description = models.TextField(max_length=200)
-    author = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
-    issues = models.ForeignKey(to=Issue, on_delete=models.CASCADE)
+    author = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank=True, null=True)
+    issues = models.ForeignKey(to=Issue, on_delete=models.CASCADE, blank=True, null=True)
     created_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

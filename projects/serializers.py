@@ -12,7 +12,7 @@ class ProjectSerializer(ModelSerializer):
 class ContributorSerializer(ModelSerializer):
     class Meta:
         model = Contributor
-        fields = "__all__"
+        fields = ['role', 'permission']
 
 
 class CommentSerializer(ModelSerializer):

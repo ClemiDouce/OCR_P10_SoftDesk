@@ -1,3 +1,5 @@
+from django.contrib.auth.models import User
+from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
@@ -14,6 +16,10 @@ class CommentViewset(ModelViewSet):
 
     def get_queryset(self):
         return Comment.objects.all()
+
+    def perform_create(self, serializer):
+        issue = get_object_or_404(Issue, pk=self.kwargs['issue_id'])
+        serializer.save(author=self.request.user, issues=issue)
 
 
 class ProjectViewset(ModelViewSet):
@@ -39,7 +45,12 @@ class IssueViewset(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Issue.objects.filter()
+        project = get_object_or_404(Project, pk=self.kwargs['id'])
+        return Issue.objects.filter(project=project)
+
+    def perform_create(self, serializer):
+        project = get_object_or_404(Project, pk=self.kwargs['id'])
+        serializer.save(project=project, author=self.request.user, assigne=self.request.user)
 
 
 class ContributorViewset(ModelViewSet):
@@ -47,4 +58,10 @@ class ContributorViewset(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Contributor.objects.all()
+        project = get_object_or_404(Project, pk=self.kwargs['id'])
+        return Contributor.objects.filter(project=project)
+
+    def perform_create(self, serializer):
+        project = get_object_or_404(Project, pk=self.kwargs['id'])
+        user = get_object_or_404(User, email=self.request.POST['email'])
+        serializer.save(user=user, project=project)
