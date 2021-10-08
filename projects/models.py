@@ -19,6 +19,10 @@ class Project(models.Model):
     def __str__(self):
         return self.titre
 
+    class Meta:
+        verbose_name = 'Project'
+        verbose_name_plural = 'Projects'
+
 
 class Contributor(models.Model):
 
@@ -43,6 +47,8 @@ class Contributor(models.Model):
 
     class Meta:
         unique_together = [['user', 'project']]
+        verbose_name = 'Contributor'
+        verbose_name_plural = 'Contributors'
 
 
 class Issue(models.Model):
@@ -78,6 +84,10 @@ class Issue(models.Model):
     def __str__(self):
         return f"{self.title}"
 
+    class Meta:
+        verbose_name = 'Issue'
+        verbose_name_plural = 'Issues'
+
 class Comment(models.Model):
     description = models.TextField(max_length=200)
     author = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
@@ -86,3 +96,7 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.description[:10]
+
+    class Meta:
+        verbose_name = 'Comment'
+        verbose_name_plural = 'Comments'
