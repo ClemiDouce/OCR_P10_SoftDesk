@@ -3,6 +3,7 @@ from rest_framework.viewsets import ModelViewSet
 
 # Create your views here.
 from projects.models import Comment, Project, Issue, Contributor
+from projects.permissions import ProjectPermission
 from projects.serializers import CommentSerializer, ProjectSerializer, IssueSerializer, ContributorSerializer
 
 
@@ -17,7 +18,7 @@ class CommentViewset(ModelViewSet):
 
 class ProjectViewset(ModelViewSet):
     serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, ProjectPermission]
 
     def get_queryset(self):
         return Project.objects.filter(contributor__role="author", contributors=self.request.user)
