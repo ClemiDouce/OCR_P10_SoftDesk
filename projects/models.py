@@ -11,10 +11,17 @@ class Project(models.Model):
         ('android', 'Android'),
     )
 
+    author = models.ForeignKey(
+        to=settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="project_author",
+        default=1,
+        null=True
+    )
     titre = models.CharField(max_length=30)
     description = models.CharField(max_length=1000, blank=True, null=True)
     type = models.TextField(choices=PROJECT_TYPES, default="back")
-    contributors = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Contributor')
+    contributors = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Contributor', related_name="contributors")
 
     def __str__(self):
         return self.titre
@@ -26,12 +33,6 @@ class Project(models.Model):
 
 class Contributor(models.Model):
 
-    ROLES = (
-        ('author', 'Author'),
-        ('responsable', 'Responsable'),
-        ('contributor', 'Contributor')
-    )
-
     PERMISSIONS = (
         ('restricted', 'Contributor'),
         ('all', 'Author')
@@ -39,11 +40,11 @@ class Contributor(models.Model):
 
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
     project = models.ForeignKey(to=Project, on_delete=models.CASCADE, blank=True, null=True)
-    role = models.CharField(choices=ROLES, max_length=20, default="contributor")
+
     permission = models.CharField(choices=PERMISSIONS, max_length=20, default="restricted")
 
     def __str__(self):
-        return f"{self.user.username},{self.role}"
+        return f"{self.user.username}"
 
     class Meta:
         unique_together = [['user', 'project']]

@@ -3,9 +3,10 @@ from projects.views import CommentViewset, ContributorViewset, ProjectViewset, I
 
 
 router = DefaultRouter()
-router.register(r'', ProjectViewset, basename="projects")
-router.register(r"^(?P<id>[^/.]+)/contributors", ContributorViewset, basename="contributors")
-router.register(r"^(?P<id>[^/.]+)/issues", IssueViewset, basename="issues")
-router.register(r"^(?P<id>[^/.]+)/issues/(?P<issue_id>[^/.]+)/comments", CommentViewset, basename="comment")
+router.register(r"projects", ProjectViewset, basename="projects")
+router.register(r"projects/(?P<id>[^/.]+)/contributors", ContributorViewset, basename="contributors")
+router.register(r"projects/(?P<id>[^/.]+)/issues", IssueViewset, basename="issues")
+router.register(r"projects/(?P<id>[^/.]+)/issues/(?P<issue_id>[^/.]+)/comments", CommentViewset, basename="comment")
+
 
 urlpatterns = router.urls
