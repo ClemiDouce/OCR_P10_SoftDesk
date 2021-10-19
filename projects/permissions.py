@@ -13,6 +13,7 @@ class ProjectPermission(permissions.BasePermission):
             return request.user == obj.author
         return True
 
+
 class IssuePermission(permissions.BasePermission):
 
     def has_permission(self, request, view):
@@ -23,6 +24,7 @@ class IssuePermission(permissions.BasePermission):
         if request.method in ["PUT", "DELETE", "PATCH"]:
             return request.user == obj.author
 
+
 class CommentPermission(permissions.BasePermission):
 
     def has_permission(self, request, view):
@@ -32,6 +34,7 @@ class CommentPermission(permissions.BasePermission):
             return request.user in project.contributors.all()
         elif request.method in ["PUT", "DELETE", "PATCH"]:
             return request.user == project.author or request.user == issue.author
+
 
 class ContributorPermission(permissions.BasePermission):
 
