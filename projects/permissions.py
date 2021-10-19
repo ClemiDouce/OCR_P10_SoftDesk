@@ -17,11 +17,11 @@ class IssuePermission(permissions.BasePermission):
 
     def has_permission(self, request, view):
         project = Project.objects.get(pk=view.kwargs['id'])
-        if request.method in ["POST", "GET"]:
-            return request.user in project.contributors.all()
-        elif request.method in ["PUT", "DELETE", "PATCH"]:
-            return request.user == project.author
+        return request.user in project.contributors.all()
 
+    def has_object_permission(self, request, view, obj):
+        if request.method in ["PUT", "DELETE", "PATCH"]:
+            return request.user == obj.author
 
 class CommentPermission(permissions.BasePermission):
 

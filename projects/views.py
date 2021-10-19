@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
+from rest_framework import status
 from rest_framework.generics import get_object_or_404
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 # Create your views here.
@@ -61,7 +63,16 @@ class ContributorViewset(ModelViewSet):
         project = get_object_or_404(Project, pk=self.kwargs['id'])
         return Contributor.objects.filter(project=project)
 
-    def perform_create(self, serializer):
+    # def perform_create(self, serializer):
+    #     project = get_object_or_404(Project, pk=self.kwargs['id'])
+    #     user = get_object_or_404(User, email=self.request.POST['email'])
+    #     serializer.save(user=user, project=project)
+
+    def create(self, request, *args, **kwargs):
         project = get_object_or_404(Project, pk=self.kwargs['id'])
         user = get_object_or_404(User, email=self.request.POST['email'])
-        serializer.save(user=user, project=project)
+        serializer = self.get_serializer(data={'user':user.pk, 'project':project.pk, 'permission':'restricted'})
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

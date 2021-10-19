@@ -13,7 +13,6 @@ class ContributorSerializer(ModelSerializer):
     class Meta:
         model = Contributor
         fields = "__all__"
-        read_only_fields = ('user', 'project')
 
 
 class CommentSerializer(ModelSerializer):
